@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yoshua_ui_test/module/cart_page/bloc/cart_page_bloc.dart';
+import 'package:yoshua_ui_test/module/home_page/bloc/home_page_bloc.dart';
+import 'package:yoshua_ui_test/module/home_page/home_page.dart';
 import 'package:yoshua_ui_test/module/login/bloc/login_bloc.dart';
 import 'package:yoshua_ui_test/module/login/login_page.dart';
 import 'package:yoshua_ui_test/module/pkbu/bloc/pkbu_bloc.dart';
@@ -29,6 +32,8 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => LoginBloc()),
         BlocProvider(create: (context) => PkbuBloc()),
+        BlocProvider(create: (context) => HomePageBloc()),
+        BlocProvider(create: (context) => CartPageBloc()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,
@@ -46,7 +51,7 @@ class MyApp extends StatelessWidget {
             home: FlutterSplashScreen(
               backgroundColor: Colors.transparent,
               duration: const Duration(milliseconds: 1250),
-              defaultNextScreen: home(),
+              nextScreen: home(),
               splashScreenBody: const SplashScreen(),
             ),
           ),
@@ -56,8 +61,8 @@ class MyApp extends StatelessWidget {
   }
 
   Widget home(){
-    if (Preferences.getInstance().contain(SharedPreferenceKey.IS_LOGIN)) {
-      return const PkbuPage();
+    if (Preferences.getInstance().contain(SharedPreferenceKey.SESSION_ID)) {
+      return const HomePage();
     } else {
       return const LoginPage();
     }

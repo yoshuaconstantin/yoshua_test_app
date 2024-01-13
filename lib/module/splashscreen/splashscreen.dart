@@ -20,7 +20,7 @@ class SplashScreen extends StatelessWidget {
               ),
             ),
             Center(
-              child: Image.asset("assets/image/ic_smile_logo.png")
+              child: Text("Testing App", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.black),)
             )
           ],
         ),

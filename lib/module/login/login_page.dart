@@ -67,8 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(
                         height: kToolbarHeight,
                       ),
-                      Center(
-                          child: Image.asset("assets/image/ic_smile_logo.png")),
                       SizedBox(
                         height: Cmdof().custH(0.17, context),
                       ),
