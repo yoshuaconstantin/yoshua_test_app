@@ -8,11 +8,10 @@ import 'package:yoshua_ui_test/module/home_page/bloc/home_page_bloc.dart';
 import 'package:yoshua_ui_test/module/home_page/home_page.dart';
 import 'package:yoshua_ui_test/module/login/bloc/login_bloc.dart';
 import 'package:yoshua_ui_test/module/login/login_page.dart';
-import 'package:yoshua_ui_test/module/pkbu/bloc/pkbu_bloc.dart';
+import 'package:yoshua_ui_test/module/search_page/bloc/search_page_bloc.dart';
 
 import 'helper/constant.dart';
 import 'helper/preferences.dart';
-import 'module/pkbu/pkbu_page.dart';
 import 'module/splashscreen/splashscreen.dart';
 
 void main() async {
@@ -31,9 +30,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => LoginBloc()),
-        BlocProvider(create: (context) => PkbuBloc()),
         BlocProvider(create: (context) => HomePageBloc()),
         BlocProvider(create: (context) => CartPageBloc()),
+        BlocProvider(create: (context) => SearchPageBloc()),
       ],
       child: GlobalLoaderOverlay(
         useDefaultLoading: false,

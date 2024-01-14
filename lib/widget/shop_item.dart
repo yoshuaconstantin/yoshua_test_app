@@ -4,7 +4,7 @@ import 'package:yoshua_ui_test/helper/custom_size.dart';
 class ShopItem extends StatefulWidget {
   final String imgUrl;
   final String productName;
-  final String productPrice;
+  final double productPrice;
   final double rating;
   final int review;
   final void Function()? onTap;
@@ -18,7 +18,7 @@ class _ShopItemState extends State<ShopItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: EdgeInsets.only(top: 10, bottom: Cmdof().custH(0.07, context),),
       child: Card(
           margin: EdgeInsets.zero,
           shape: RoundedRectangleBorder(
@@ -40,6 +40,8 @@ class _ShopItemState extends State<ShopItem> {
                   borderRadius: BorderRadius.circular(25),
                   child: Image.network(
                     widget.imgUrl,
+                    cacheWidth: 200,
+                    cacheHeight: 200,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -50,7 +52,7 @@ class _ShopItemState extends State<ShopItem> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Price: "+widget.productPrice, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black54),),
+                  Text("Price: "+widget.productPrice.toString(), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black54),),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

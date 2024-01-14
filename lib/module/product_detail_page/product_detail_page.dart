@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yoshua_ui_test/helper/custom_size.dart';
+import 'package:yoshua_ui_test/util/NoOverScrollGlow.dart';
+import 'package:yoshua_ui_test/widget/FlushBar.dart';
+
+import '../../widget/navigators.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final String imgUrl;
@@ -52,51 +56,56 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     return SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                  width: Cmdof().W(context),
-                  height: Cmdof().custH(0.3, context),
-                  child: Image.network(widget.imgUrl)
-              ),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: ScrollConfiguration(
+            behavior: NoOverscrollBehavior(),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Price: USD "+widget.price.toString(),style: TextStyle(fontSize: 17, color: Colors.blue, fontWeight: FontWeight.w600),),
+                  SizedBox(
+                      width: Cmdof().W(context),
+                      height: Cmdof().custH(0.3, context),
+                      child: Image.network(widget.imgUrl)
+                  ),
+                  SizedBox(height: 10,),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: Colors.blueGrey, width: 1)
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.star, color: Colors.yellow, size: 20,),
-                            Text(widget.rating.toString(), style: TextStyle( fontSize: 14),),
-                            SizedBox(width: 10,),
-                            Text(widget.review.toString(), style: TextStyle( fontSize: 14),),
-                            Text(" reviews", style: TextStyle( fontSize: 14),),
+                      Text("Price: USD "+widget.price.toString(),style: TextStyle(fontSize: 17, color: Colors.blue, fontWeight: FontWeight.w600),),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(color: Colors.blueGrey, width: 1)
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.star, color: Colors.yellow, size: 20,),
+                                Text(widget.rating.toString(), style: TextStyle( fontSize: 14),),
+                                SizedBox(width: 10,),
+                                Text(widget.review.toString(), style: TextStyle( fontSize: 14),),
+                                Text(" reviews", style: TextStyle( fontSize: 14),),
 
-                          ],
-                        ),
-                      )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ],
                   ),
+                  SizedBox(height: 10,),
+                  Text(widget.productName ,style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.w700),),
+                  SizedBox(height: 25,),
+                  Text("Description" ,style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w300),),
+                  SizedBox(height: 5,),
+                  Text(widget.desc ,style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400),),
                 ],
               ),
-              SizedBox(height: 10,),
-              Text(widget.productName ,style: TextStyle(fontSize: 25, color: Colors.black, fontWeight: FontWeight.w700),),
-              SizedBox(height: 25,),
-              Text("Description" ,style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w300),),
-              SizedBox(height: 5,),
-              Text(widget.desc ,style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.w400),),
-            ],
+            ),
           ),
         )
     );
@@ -105,7 +114,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget BottomNavBar(){
     return InkWell(
       onTap: (){
-
+        FlushBarWidget.showSuccess("Success add to cart").show(context).then((value) => Navigators.pop(context));
       },
       child: Container(
         width: Cmdof().W(context),
@@ -113,7 +122,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.blue,
-          borderRadius: BorderRadius.circular(20)
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
         ),
         child: Center(
           child: Text("Add to cart", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: Colors.white),),

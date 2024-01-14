@@ -7,7 +7,7 @@ class ProductResponse {
   final String description;
   final String category;
   final String image;
-  final ProductRating? rating;
+  final ProductRating rating;
 
 
 
@@ -24,7 +24,7 @@ class ProductResponse {
   });
 
   factory ProductResponse.fromJson(Map<String, dynamic> json) {
-    ProductRating? data;
+    ProductRating data = ProductRating(rate: 0, count: 0);
 
     if (json['rating'] != null) {
       data = ProductRating.fromJson(json['rating']);
@@ -34,7 +34,7 @@ class ProductResponse {
     return ProductResponse(
       id: json['id'],
       title: json['title'],
-      price: json['price'],
+      price: json['price'] is int ? json['price'].toDouble() : json['price'] as double,
       description: json['description'],
       category: json['category'],
       image: json['image'],

@@ -8,7 +8,7 @@ class ProductRating {
   });
 
   factory ProductRating.fromJson(Map<String, dynamic> json) => ProductRating(
-    rate: json['rate'],
+    rate: json['rate'] is int ? json['rate'].toDouble() : json['rate'] as double,
     count: json['count'],
   );
 }
