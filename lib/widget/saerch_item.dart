@@ -53,8 +53,7 @@ class _SearchItemState extends State<SearchItem> {
                     children: [
                       SizedBox(
                           width: Cmdof().custW(0.7, context),
-                          child: Flexible(
-                              child: Text(widget.productName, maxLines: 3, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis),))),
+                          child: Text(widget.productName, maxLines: 3, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.black, overflow: TextOverflow.ellipsis))),
                       Text("Price USD "+widget.productPrice.toString(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13, color: Colors.black54),),
                     ],
                   )
