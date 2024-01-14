@@ -2,8 +2,8 @@
  Technical Test Mobile Developer PT. Serasi Autoraya
 
 #Info Login
-username: "mor_2314",
-password: "83r5^_",
+ username: "mor_2314"
+ password: "83r5^_"
 
 Beberapa hal yang tidak bisa di lakukan bedasarkan https://fakestoreapi.com/docs
 1. Tidak bisa menambah sesuatu di cart
