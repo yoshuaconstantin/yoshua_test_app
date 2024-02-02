@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
   Widget BottomNavBar(){
     return InkWell(
       onTap: (){
-        Navigators.push(context, CartPage());
+        // Navigators.push(context, CartPage());
       },
       child: Container(
         width: Cmdof().W(context),
