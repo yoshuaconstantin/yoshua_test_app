@@ -6,11 +6,11 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:yoshua_ui_test/api/endpoint/product/get_product_response.dart';
 
 import '../helper/constant.dart';
 import '../helper/custom_catch.dart';
 import '../helper/preferences.dart';
-import 'endpoint/PKBU/pkbu_request.dart';
 import 'endpoint/login/login_request.dart';
 import 'interceptor/authorization_interceptor.dart';
 
@@ -84,29 +84,6 @@ class ApiManager {
     }
   }
 
-  Future<Response> getPKBUData(
-      {required PkbuRequest pkbuRequest, bool secondTry = false}) async {
-    try {
-      Dio dio = await getDio();
-
-      Response response = await dio.post(ApiUrl.GET_PKBU, data: pkbuRequest);
-
-      return response;
-    } on DioError catch (e) {
-      if (secondTry) {
-        if (e.type == DioErrorType.response) {
-          rethrow;
-        } else {
-          String message = await CustomCatch.internetCatch();
-          throw Exception(message);
-        }
-      } else {
-        PRIMARY = !PRIMARY;
-
-        return getPKBUData(pkbuRequest: pkbuRequest, secondTry: true);
-      }
-    }
-  }
 
   Future<Response> refreshToken(
       {required String expiredToken, bool secondTry = false}) async {
@@ -130,6 +107,175 @@ class ApiManager {
         PRIMARY = !PRIMARY;
 
         return refreshToken(expiredToken: expiredToken, secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> getCategory(
+      {bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_CATEGORIES);
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getCategory(secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> getProduct(
+      {bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_PRODUCT);
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getCategory(secondTry: true);
+      }
+    }
+  }
+
+  Future<ProductResponse> getProductFake(
+      {bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_PRODUCT);
+      List<ProductResponse> data = response.data;
+
+      return data[0];
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getProductFake(secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> getSingleProduct(
+      {required int id,bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_PRODUCT+"/"+id.toString());
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getCategory(secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> getCategoriesProduct(
+      {required String categories,bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_SPECIFIC_CATEGORY+categories);
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getCategory(secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> getUserCart(
+      {bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_USER_CART+"2");
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getUserCart(secondTry: true);
+      }
+    }
+  }
+
+  Future<Response> postAddProductsToCart(
+      {required String categories,bool secondTry = false}) async {
+    try {
+      Dio dio = await getDio();
+
+      Response response = await dio.get(ApiUrl.GET_SPECIFIC_CATEGORY+categories);
+
+      return response;
+    } on DioError catch (e) {
+      if (secondTry) {
+        if (e.type == DioErrorType.response) {
+          rethrow;
+        } else {
+          String message = await CustomCatch.internetCatch();
+          throw Exception(message);
+        }
+      } else {
+        PRIMARY = !PRIMARY;
+
+        return getCategory(secondTry: true);
       }
     }
   }

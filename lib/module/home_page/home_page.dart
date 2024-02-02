@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yoshua_ui_test/widget/categorybar.dart';
 
+import '../../api/endpoint/product/get_product_response.dart';
 import '../../helper/custom_size.dart';
 import '../../util/NoOverScrollGlow.dart';
+import '../../widget/FlushBar.dart';
 import '../../widget/navigators.dart';
 import '../../widget/shop_item.dart';
 import '../cart_page/cart_page.dart';
 import '../product_detail_page/product_detail_page.dart';
+import '../search_page/search_page.dart';
 import 'bloc/home_page_bloc.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,13 +21,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  bool isLoading = false;
   int currentIndex = 0;
+
+  List<dynamic> categoryData = [];
+  List<ProductResponse> productsData = [];
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar:appbar(),
       body: BlocListener<HomePageBloc, HomePageState>(
         listener: (context, state) {
+          if (state is onGetCategorySuccess){
+            setState(() {
+              categoryData.add("All");
+              categoryData.addAll(state.data);
+            });
+
+          } else if (state is onGetCategoryFailed){
+            FlushBarWidget.showFailure(state.message)
+                .show(context);
+          } else if (state is onGetProductsSuccess){
+            setState(() {
+              productsData.clear();
+              productsData = state.data;
+            });
+          } else if (state is onGetProductsLoading){
+            setState(() {
+              isLoading = true;
+            });
+          } else if (state is onGetProductsFailed){
+            FlushBarWidget.showFailure(state.message)
+                .show(context);
+          } else if (state is onGetProductsFinished){
+            setState(() {
+              isLoading = false;
+            });
+          }
           // TODO: implement listener
         },
         child: SafeArea(
@@ -34,6 +70,13 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: BottomNavBar(),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<HomePageBloc>().add(GetHomeCategory());
+    context.read<HomePageBloc>().add(GetHomeProduct());
   }
 
   AppBar? appbar(){
@@ -50,7 +93,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               InkWell(
                   onTap: (){
-
+                    Navigators.push(context, SearchPage());
                   },
                   child: Icon(Icons.search, size: 25, color: Colors.black,)),
               SizedBox(width: 5,),
@@ -65,29 +108,27 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget Body(){
-    return ScrollConfiguration(
-      behavior: NoOverscrollBehavior(),
-      child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Halo user", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),),
-            Text("What's you are looking for?", style: TextStyle(fontWeight: FontWeight.w800, fontSize: 35),),
-            SizedBox(height: 10,),
-            CategoryBar(),
-            SizedBox(height: 20,),
-            ShopItemList()
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Halo user", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 18),),
+          Text("What's you are looking for?", style: TextStyle(fontWeight: FontWeight.w800, fontSize: 35),),
+          SizedBox(height: 10,),
+          CategoryBar(),
+          SizedBox(height: 20,),
+          ShopItemList()
+        ],
       ),
     );
   }
 
   Widget CategoryBar(){
-    return ListTile(
+    return categoryData.isEmpty ? Text("-")
+        :
+    ListTile(
       contentPadding: EdgeInsets.zero,
       horizontalTitleGap: 0,
       minVerticalPadding: 0,
@@ -99,16 +140,21 @@ class _HomePageState extends State<HomePage> {
         child: ListView.separated(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
+          itemCount: categoryData.length,
           itemBuilder: (context, index) {
             return CategoryBarItem(
               currentIndex: currentIndex,
                 index: index,
-                title: "Anime Koi Koi",
+                title: categoryData[index],
                 onTap: () {
                   // Navigators.push(context, const TopicDetailPage());
                   setState(() {
                     currentIndex = index;
+                    if(categoryData[index].toString() == "All"){
+                      context.read<HomePageBloc>().add(GetHomeProduct());
+                    }else{
+                      context.read<HomePageBloc>().add(GetCategoryProducts(categories: categoryData[index].toString()));
+                    }
                   });
                 }
             );
@@ -122,28 +168,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget ShopItemList(){
-    return Container(
-      height: Cmdof().H(context),
-      width: Cmdof().W(context),
+    return productsData.isEmpty ?
+    SizedBox() :
+    Expanded(
       child: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 10),
         scrollDirection: Axis.vertical,
-        itemCount: 9,
+        itemCount: productsData.length,
         itemBuilder: (context, index) {
+          ProductResponse data = productsData[index];
           return ShopItem(
-            imgUrl: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-            productName: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-            productPrice: "USD 109.95",
-            rating: 3.9,
-            review: 120,
+            imgUrl: data.image,
+            productName: data.title,
+            productPrice: data.price,
+            rating: data.rating!.rate,
+            review: data.rating!.count,
             onTap: (){
               Navigators.push(context,
-                  ProductDetailPage(imgUrl: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
-                  productName: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-                  price: 109.95,
-                  review: 120,
-                  rating: 3.9,
-                  desc: "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
+                  ProductDetailPage(imgUrl: data.image,
+                  productName: data.title,
+                  price: data.price,
+                  review: data.rating!.count,
+                  rating: data.rating!.rate,
+                  desc: data.description,
                   )
               );
             },

@@ -15,10 +15,10 @@ class AuthorizationInterceptor extends InterceptorsWrapper {
 
       if (StringUtils.isNotNullOrEmpty(expires)) {
         if (DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(int.parse(expires!)))) {
-          await refreshToken();
+          //await refreshToken();
         }
       } else {
-        await refreshToken();
+        //await refreshToken();
       }
 
       options.headers["Authorization"] = Preferences.getInstance().getString(SharedPreferenceKey.SESSION_ID);
